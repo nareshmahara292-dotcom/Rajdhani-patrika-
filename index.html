@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Momo Ghar Order - Golbazar</title>
+  <style>
+    :root {
+      --primary: #e63946;
+      --primary-dark: #b71c1c;
+      --accent: #ffb703;
+      --bg-dark: #121212;
+      --card-bg: #1e1e24;
+      --text: #ffffff;
+      --text-muted: #b0bec5;
+      --border: #2c2c34;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    #welcome-screen {
+      background: linear-gradient(135deg, #e63946, #450a0a);
+    }
+
+    .screen-icon {
+      font-size: 4.5rem;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+    }
+
+    .screen h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .screen p {
+      font-size: 1rem;
+      color: #ffe6e6;
+      margin-bottom: 28px;
+    }
+
+    .btn-next, .btn-login {
+      background: linear-gradient(45deg, #ffb703, #fb8500);
+      color: #000;
+      border: none;
+      padding: 15px 36px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(251, 133, 0, 0.4);
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .login-box {
+      background: #1e1e24;
+      color: var(--text);
+      padding: 24px;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 340px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--accent);
+    }
+
+    #main-app {
+      display: none;
+      padding-bottom: 90px;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 24px 20px 28px;
+      text-align: center;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 4px 25px rgba(230, 57, 70, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .store-badge {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .user-greeting {
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.3);
+      color: var(--accent);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-top: 6px;
+      border: 1px solid rgba(255,183,3,0.3);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: -16px auto 0;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-info h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .item-price {
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #2b2b36;
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .qty-count {
+      font-weight: 700;
+      min-width: 16px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      background: #2b2b36;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      color: #fff;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent);
+    }
+
+    .btn-location {
+      background-color: rgba(255, 183, 3, 0.15);
+      color: var(--accent);
+      border: 1px dashed var(--accent);
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .btn-location.success {
+      background-color: rgba(37, 211, 102, 0.2);
+      color: #25D366;
+      border-color: #25D366;
+    }
+
+    .footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1e1e24;
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -5px 25px rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .total-price {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .btn-order {
+      background: linear-gradient(45deg, #25D366, #128C7E);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    }
+
+    .btn-order:disabled {
+      background: #444;
+      color: #888;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STEP 1: WELCOME SCREEN (NEPALI) -->
+  <div id="welcome-screen" class="screen">
+    <div class="screen-icon">🥟</div>
+    <h1>तपाईंको मोमो घरमा स्वागत छ</h1>
+    <p>गोलबजारको सबैभन्दा मीठो र ताजा मोमो, चाउमीन अनलाइन अर्डर गर्नुहोस्!</p>
+    <button class="btn-next" onclick="goToLogin()">अगाडि बढ्नुहोस् ➔</button>
+  </div>
+
+  <!-- STEP 2: GMAIL LOGIN SCREEN -->
+  <div id="login-screen" class="screen" style="display: none;">
+    <div class="login-box">
+      <h2>खाता लगइन गर्नुहोस्</h2>
+      <div class="form-group">
+        <label>तपाईंको नाम (Full Name)</label>
+        <input type="text" id="login-name" class="form-control" placeholder="उदा: Rujan Mahara">
+      </div>
+      <div class="form-group">
+        <label>Gmail ID</label>
+        <input type="email" id="login-email" class="form-control" placeholder="example@gmail.com">
+      </div>
+      <button class="btn-login" onclick="processLogin()">लगइन गर्नुहोस्</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: MAIN APP SCREEN -->
+  <div id="main-app">
+    <header>
+      <div class="store-badge">
+        <span>🥄</span> <span>Momo & Fast Food Station</span>
+      </div>
+      <h1>🥟 Momo Ghar</h1>
+      <p>Fast & Fresh Delivery in Golbazar</p>
+      <div class="user-greeting" id="user-display"></div>
+    </header>
+
+    <div class="container">
+      <!-- Menu Section -->
+      <div class="card">
+        <div class="section-title">Delicious Menu</div>
+        
+        <div class="menu-item">
+          <div class="item-info">
+            <h3>Steam Veg Momo</h3>
+            <div class="item-price">रु 100</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('veg', -1)">-</button>
+            <span class="qty-count" id="qty-veg">0</span>
+            <button class="qty-btn" onclick="updateQty('veg', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-info">
+            <h3>Steam Chicken Momo</h3>
+            <div class="item-price">रु 150</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('chicken', -1)">-</button>
+            <span class="qty-count" id="qty-chicken">0</span>
+            <button class="qty-btn" onclick="updateQty('chicken', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-info">
+            <h3>C-Momo (Chicken)</h3>
+            <div class="item-price">रु 180</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('cmomo', -1)">-</button>
+            <span class="qty-count" id="qty-cmomo">0</span>
+            <button class="qty-btn" onclick="updateQty('cmomo', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-info">
+            <h3>Jhol Momo</h3>
+            <div class="item-price">रु 160</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('jhol', -1)">-</button>
+            <span class="qty-count" id="qty-jhol">0</span>
+            <button class="qty-btn" onclick="updateQty('jhol', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-info">
+            <h3>Veg Chowmein</h3>
+            <div class="item-price">रु 120</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('vchow', -1)">-</button>
+            <span class="qty-count" id="qty-vchow">0</span>
+            <button class="qty-btn" onclick="updateQty('vchow', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-info">
+            <h3>Chicken Chowmein</h3>
+            <div class="item-price">रु 160</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('cchow', -1)">-</button>
+            <span class="qty-count" id="qty-cchow">0</span>
+            <button class="qty-btn" onclick="updateQty('cchow', 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Form Section -->
+      <div class="card">
+        <div class="section-title">Delivery Details</div>
+        
+        <div class="form-group">
+          <label>Your Phone Number</label>
+          <input type="tel" id="cust-phone" class="form-control" placeholder="98XXXXXXXX">
+        </div>
+
+        <div class="form-group">
+          <label>Select Delivery Area (Golbazar)</label>
+          <select id="cust-area" class="form-control">
+            <option value="Golbazar Chowk">Golbazar Chowk</option>
+            <option value="Nipaniya Kuti Tol">Nipaniya Kuti Tol</option>
+            <option value="Magar Toli">Magar Toli</option>
+            <option value="Gumba Chowk">Gumba Chowk</option>
+            <option value="Sainik Chowk">Sainik Chowk</option>
+          </select>
+        </div>
+
+        <!-- Live GPS Button -->
+        <div class="form-group">
+          <label>Exact Location (Optional but recommended)</label>
+          <button type="button" class="btn-location" id="loc-btn" onclick="getGPSLocation()">
+            📍 Share Current Live Location
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Fixed Bar -->
+    <div class="footer-bar">
+      <div>
+        <div style="font-size:0.75rem; color:var(--text-muted);">Total Amount</div>
+        <div class="total-price" id="total-val">रु 0</div>
+      </div>
+      <button class="btn-order" id="order-btn" onclick="sendOrder()" disabled>Order via WhatsApp</button>
+    </div>
+  </div>
+
+  <script>
+    let loggedUser = { name: "", email: "" };
+    let userLocationURL = "";
+
+    // Check if user is already logged in
+    window.onload = function() {
+      const savedName = localStorage.getItem("momo_user_name");
+      const savedEmail = localStorage.getItem("momo_user_email");
+
+      if (savedName && savedEmail) {
+        loggedUser.name = savedName;
+        loggedUser.email = savedEmail;
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        document.getElementById('user-display').innerText = `👤 ${loggedUser.name} (${loggedUser.email})`;
+      }
+    };
+
+    function goToLogin() {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    }
+
+    function processLogin() {
+      const name = document.getElementById('login-name').value.trim();
+      const email = document.getElementById('login-email').value.trim();
+
+      if (!name || !email) {
+        alert("कृपया आफ्नो नाम र Gmail ID भर्नुहोस्!");
+        return;
+      }
+
+      // Save to localStorage so user doesn't need to login again
+      localStorage.setItem("momo_user_name", name);
+      localStorage.setItem("momo_user_email", email);
+
+      loggedUser.name = name;
+      loggedUser.email = email;
+
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('main-app').style.display = 'block';
+      document.getElementById('user-display').innerText = `👤 ${loggedUser.name} (${loggedUser.email})`;
+    }
+
+    const prices = { 
+      veg: 100, 
+      chicken: 150, 
+      cmomo: 180, 
+      jhol: 160,
+      vchow: 120,
+      cchow: 160
+    };
+    
+    const quantities = { 
+      veg: 0, 
+      chicken: 0, 
+      cmomo: 0, 
+      jhol: 0,
+      vchow: 0,
+      cchow: 0
+    };
+
+    function updateQty(item, change) {
+      if (quantities[item] + change >= 0) {
+        quantities[item] += change;
+        document.getElementById(`qty-${item}`).innerText = quantities[item];
+        calculateTotal();
+      }
+    }
+
+    function calculateTotal() {
+      let total = 0;
+      total += quantities.veg * prices.veg;
+      total += quantities.chicken * prices.chicken;
+      total += quantities.cmomo * prices.cmomo;
+      total += quantities.jhol * prices.jhol;
+      total += quantities.vchow * prices.vchow;
+      total += quantities.cchow * prices.cchow;
+
+      document.getElementById('total-val').innerText = `रु ${total}`;
+      document.getElementById('order-btn').disabled = (total === 0);
+    }
+
+    function getGPSLocation() {
+      const btn = document.getElementById('loc-btn');
+      if (navigator.geolocation) {
+        btn.innerText = "⏳ Location खोज्दैछ...";
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          userLocationURL = `https://maps.google.com/?q=${lat},${lon}`;
+          btn.innerText = "✅ Location प्राप्त भयो!";
+          btn.classList.add('success');
+        }, () => {
+          alert("Location पाउन सकिएन। कृपया Browser Location On गर्नुहोस्।");
+          btn.innerText = "📍 Share Current Live Location";
+        });
+      } else {
+        alert("तपाईंको Browser ले Location Support गर्दैन।");
+      }
+    }
+
+    function sendOrder() {
+      const phone = document.getElementById('cust-phone').value.trim();
+      const area = document.getElementById('cust-area').value;
+
+      if (!phone) {
+        alert("कृपया आफ्नो फोन नम्बर राख्नुहोस्!");
+        return;
+      }
+
+      let orderList = "";
+      if (quantities.veg > 0) orderList += `• Steam Veg Momo: ${quantities.veg} plate\n`;
+      if (quantities.chicken > 0) orderList += `• Steam Chicken Momo: ${quantities.chicken} plate\n`;
+      if (quantities.cmomo > 0) orderList += `• C-Momo (Chicken): ${quantities.cmomo} plate\n`;
+      if (quantities.jhol > 0) orderList += `• Jhol Momo: ${quantities.jhol} plate\n`;
+      if (quantities.vchow > 0) orderList += `• Veg Chowmein: ${quantities.vchow} plate\n`;
+      if (quantities.cchow > 0) orderList += `• Chicken Chowmein: ${quantities.cchow} plate\n`;
+
+      const total = document.getElementById('total-val').innerText;
+
+      let msg = `*NEW MOMO & FOOD ORDER*\n\n`;
+      msg += `*Name:* ${loggedUser.name}\n`;
+      msg += `*Email:* ${loggedUser.email}\n`;
+      msg += `*Phone:* ${phone}\n`;
+      msg += `*Area:* ${area}\n`;
+      if (userLocationURL !== "") {
+        msg += `*Map Location:* ${userLocationURL}\n`;
+      }
+      msg += `\n*Order Details:*\n${orderList}\n`;
+      msg += `*Total Amount:* ${total}`;
+
+      const ownerWhatsApp = "9779800000000"; 
+      const encodedMsg = encodeURIComponent(msg);
+      window.open(`https://wa.me/${ownerWhatsApp}?text=${encodedMsg}`, '_blank');
+    }
+  </script>
+</body>
+</html>
